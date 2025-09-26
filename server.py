@@ -5,35 +5,21 @@ import os
 
 connected = set()
 
-# Состояние игры (тайлы, туман и т.д.)
-game_state = {
-    "tiles": [],
-    "fog": [],
-    "players": {}
-}
-
-async def handler(websocket, path=None):  # Добавим path, но игнорируем
-    # Добавляем клиента
+async def handler(websocket, path):
     connected.add(websocket)
     print(f"Клиент подключился. ID: {id(websocket)}")
 
     # Отправляем начальное состояние
-    await websocket.send(json.dumps(game_state))
+    await websocket.send(json.dumps({"message": "Добро пожаловать!"}))
 
     try:
         async for message in websocket:
             data = json.loads(message)
             print(f"Сервер получил: {data}")
 
-            # Обновляем состояние игры
-            if data.get("type") == "move_tile":
-                game_state["tiles"].append(data["tile"])
-            elif data.get("type") == "update_fog":
-                game_state["fog"].append(data["fog"])
-
             # Рассылаем всем клиентам
             if connected:
-                await asyncio.gather(*[client.send(json.dumps(game_state)) for client in connected])
+                await asyncio.gather(*[client.send(json.dumps(data)) for client in connected])
     except websockets.exceptions.ConnectionClosed:
         pass
     finally:
