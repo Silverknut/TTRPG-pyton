@@ -12,7 +12,7 @@ game_state = {
     "players": {}
 }
 
-async def handler(websocket, path):
+async def handler(websocket):
     # Добавляем клиента
     connected.add(websocket)
     print(f"Клиент подключился. ID: {id(websocket)}")
