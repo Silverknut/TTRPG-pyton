@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import os
 
 connected = set()
 
@@ -40,8 +41,9 @@ async def handler(websocket, path):
         print(f"Клиент отключился. ID: {id(websocket)}")
 
 async def main():
-    server = await websockets.serve(handler, "0.0.0.0", 8080)
-    print("Сервер запущен на порт 8080")
+    port = int(os.environ.get("PORT", 8080))
+    server = await websockets.serve(handler, "0.0.0.0", port)
+    print(f"Сервер запущен на порт {port}")
     await server.wait_closed()
 
 asyncio.run(main())
