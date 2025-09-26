@@ -39,7 +39,9 @@ async def handler(websocket, path):
         connected.remove(websocket)
         print(f"Клиент отключился. ID: {id(websocket)}")
 
-start_server = websockets.serve(handler, "0.0.0.0", 8080)
+async def main():
+    server = await websockets.serve(handler, "0.0.0.0", 8080)
+    print("Сервер запущен на порт 8080")
+    await server.wait_closed()
 
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+asyncio.run(main())
