@@ -41,7 +41,7 @@ async def handler(websocket, path):
         print(f"Клиент отключился. ID: {id(websocket)}")
 
 async def main():
-    port = int(os.environ.get("PORT", 8080))
+    port = int(os.environ.get("PORT", 8080))  # Используем переменную PORT от Railway
     server = await websockets.serve(handler, "0.0.0.0", port)
     print(f"Сервер запущен на порт {port}")
     await server.wait_closed()
